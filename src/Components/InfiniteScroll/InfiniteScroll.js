@@ -14,10 +14,13 @@ export default function InfiniteScroll() {
     //cela va nous servir a faire les recherches
     const [searchState, setSearchState] = useState('random')
 
+    //on défini un firstCall car sinon infiniteFetchData et searchFetchData sont appelé en meme temps
+    const [firstCall, setFirstCall] = useState(true)
+
     const infiniteFetchData = () => {
 
         //on fetch sur l'API de unsplash avec pageIndex qui est instancié à 1 après on défini le nombre de photos avec per_page ici 30 , le query nous donnera searchData qui est instancié avec random et client ou il faudra utiliser la clé de l'API unsplash
-        fetch(`https://api.unsplash.com/search/photos?page=${pageIndex}&per_page=30&query=${searchState}&client_id=ehNbL9uq_eVb9etnV5dbGSQcuqdFILOLmK1KhTuaEmg`)
+        fetch(`https://api.unsplash.com/search/photos?page=${pageIndex}&per_page=30&query=${searchState}&client_id=`)
         .then((response) =>{
             //return la réponse au format json
             return response.json()
@@ -59,6 +62,7 @@ export default function InfiniteScroll() {
 
             //on met à jour notre dataImg
             setDataImg(newFreshState);
+            setFirstCall(false)
         })
 
     }
@@ -75,7 +79,7 @@ export default function InfiniteScroll() {
     const searchFetchData = () => {
 
         //on fetch sur l'API de unsplash avec pageIndex qui est instancié à 1 après on défini le nombre de photos avec per_page ici 30 , le query nous donnera searchData qui est instancié avec random et client ou il faudra utiliser la clé de l'API unsplash
-        fetch(`https://api.unsplash.com/search/photos?page=${pageIndex}&per_page=30&query=${searchState}&client_id=ehNbL9uq_eVb9etnV5dbGSQcuqdFILOLmK1KhTuaEmg`)
+        fetch(`https://api.unsplash.com/search/photos?page=${pageIndex}&per_page=30&query=${searchState}&client_id=`)
         .then((response) =>{
             //return la réponse au format json
             return response.json()
@@ -125,6 +129,7 @@ export default function InfiniteScroll() {
     //on appel le useEffect de base et à chaque fois que searchState change on relance la fonction searchFetchData pour recupérer de nouvelle images
     useEffect(() => {
 
+        if(firstCall) return;
         searchFetchData()
         
     },[searchState])
